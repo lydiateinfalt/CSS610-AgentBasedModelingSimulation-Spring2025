@@ -1,10 +1,12 @@
 ## Original Code provided by Prof Axtell CSS 610 Spring 2025 Homework 2
 ## Code modified by L. Teinfalt 
-## 02/04/25
+## Calling  ZITraders Class, RANDOM Activation
+## 02/25/2025
 
 import ZITraders
 from datetime import datetime
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # Generate a population of agents which will be used for the model
 print ("Generating Agents...")
@@ -39,10 +41,9 @@ def visualization(prices, quantity):
     plt.show()
 
 ######################### First Run #########################################
-# Use the generated agents to exercise the model and return the results
-print ("Executing first run...")
+# RANDOM ACTIVATION : FIRST RUN 
+print ("RANDOM ACTIVATION : FIRST RUN ...")
 startTime = datetime.now()
-#thisRun.executeTrades()
 thisRun.executeTrades_parallel()
 endTime = datetime.now()
 print ("Model execution time (HH:MM:SS) is: " + str(endTime-startTime))
@@ -67,9 +68,9 @@ print("")
 ######################### Second Run #########################################
 # Reset the model and then run it again using the same set of agents
 thisRun.resetModel()
-print ("Executing second run...")
+print ("RANDOM ACTIVATION : SECOND RUN")
 startTime = datetime.now()
-thisRun.executeTrades()
+thisRun.executeTrades_parallel()
 endTime = datetime.now()
 print ("Model execution time (HH:MM:SS) is: " + str(endTime-startTime))
 print ("Quantity traded = " + str(thisRun.getLengthTradeData()))
@@ -87,26 +88,80 @@ print("Prices for this trade", prices2)
 visualization(prices2, quantity2)
 print ("2," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePriceData()) + "," + str(thisRun.getStdDevPriceData()))
 
+#Method for visualizing the number of trades, average prices, standard deviation      
+def run_visualization(list1, list2, list3):
+    run_list = list(range(35))
+    data = {'run': run_list, "Number of Trades": list1, "Average Price": list2, "Standard Deviation": list3 }
+    df = pd.DataFrame(data)
 
+    # Plotting the data
+    plt.figure(figsize=(14,7))
 
-######################### 35 Runs Without Changing Agents #########################################
-print ("")
-print ("35 runs WITHOUT changing the agents")
-print ("run,Quantity Traded, Average Price, Standard Deviation")
-for i in range(35):
-    # Reset the model and then run it again using the same set of agents
-    thisRun.resetModel()
-##    print "Executing run number " + str(i + 3)
-##    startTime = datetime.now()
-    thisRun.executeTrades()
-    print (str(i + 3) + "," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePriceData()) + "," + str(thisRun.getStdDevPriceData()))
+    # Box plot for Trades
+    plt.subplot(1, 3, 1)
+    plt.hist(df['Number of Trades'], bins=10, edgecolor='black')
+    plt.title('Histogram: Number of Trades')
+    plt.grid(True)
+    plt.xlabel('Quantity Traded')
 
-##################### 35 Runs With Agents #########################################
-print ("35 runs changing the agents")
-print ("run,Quantity Traded, Average Price, Standard Deviation")
-for i in range(35):
-    # Reset the model and then run it again using the same set of agents
-    thisRun.resetModel()
-    thisRun.generateAgents()
-    thisRun.executeTrades()
-    print (str(i + 1) + "," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePriceData()) + "," + str(thisRun.getStdDevPriceData()))
+    # Plot Average Price
+    plt.subplot(1, 3, 2)
+    plt.boxplot(df['Average Price'])
+    plt.title('Average Price over Runs')
+    plt.xlabel('Run')
+    plt.ylabel('Average Price')
+
+    # Plot Standard Deviation
+    plt.subplot(1, 3, 3)
+    plt.boxplot(df['Standard Deviation'])
+    plt.title('Standard Deviation over Runs')
+    plt.xlabel('Run')
+    plt.ylabel('Standard Deviation')
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
+
+#Model to run multiple runs specified by parameter num_runs
+#Send TRUE to change_agent if new agents should be generated in ZITraders
+def run_model(num_runs, change_agent):       
+    print ("")
+    if change_agent is True:
+        print("New Agents Generated")
+    else: print("Runs WITHOUT changing the agents")
+    print ("Random Activation Scheme with Number of Runs ", num_runs)
+
+    print ("run,Quantity Traded, Average Price, Standard Deviation")
+    trade_count = []
+    avg_price = []
+    sd_price = []
+
+    for i in range(num_runs):
+        # Reset the model and then run it again using the same set of agents
+        thisRun.resetModel()
+        if change_agent is True:
+            thisRun.generateAgents()
+        ##    print "Executing run number " + str(i + 3)
+        ##    startTime = datetime.now()
+        
+        #calling the method from ZITraders class using Random activation
+        thisRun.executeTrades_parallel()
+        trade_num = thisRun.getLengthTradeData()
+        avg_p = thisRun.getAveragePriceData()
+        sd_p = thisRun.getStdDevPriceData()
+        
+        #Append the current run's lists and print to console
+        trade_count.append(trade_num)
+        avg_price.append(avg_p)
+        sd_price.append(sd_p)
+        print (str(i + 3) + "," + str(trade_num) + "," + str(avg_p) + "," + str(sd_p))
+
+    #At the end of runs, create visualizations
+    run_visualization(trade_count, avg_price,sd_price)
+    
+#call the multiple runs method by sending the number of runs and whether new agents
+#should be generated
+run_model(35, False)
+run_model(35, True)

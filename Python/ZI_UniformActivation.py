@@ -1,6 +1,7 @@
 ## Original Code provided by Prof Axtell CSS 610 Spring 2025 Homework 2
 ## Code modified by L. Teinfalt 
-## 02/04/25
+## Calling 
+## 02/21/2025
 
 import ZITraders
 from datetime import datetime
@@ -39,10 +40,9 @@ def visualization(prices, quantity):
     plt.show()
 
 ######################### First Run #########################################
-# Use the generated agents to exercise the model and return the results
-print ("Executing first run...")
+# UNIFORM ACTIVATION : FIRST RUN 
+print ("UNIFORM ACTIVATION : FIRST RUN ...")
 startTime = datetime.now()
-#thisRun.executeTrades()
 thisRun.executeTrades_parallel()
 endTime = datetime.now()
 print ("Model execution time (HH:MM:SS) is: " + str(endTime-startTime))
@@ -67,9 +67,9 @@ print("")
 ######################### Second Run #########################################
 # Reset the model and then run it again using the same set of agents
 thisRun.resetModel()
-print ("Executing second run...")
+print ("UNIFORM ACTIVATION : SECOND RUN")
 startTime = datetime.now()
-thisRun.executeTrades()
+thisRun.executeTrades_parallel()
 endTime = datetime.now()
 print ("Model execution time (HH:MM:SS) is: " + str(endTime-startTime))
 print ("Quantity traded = " + str(thisRun.getLengthTradeData()))
@@ -91,22 +91,22 @@ print ("2," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePr
 
 ######################### 35 Runs Without Changing Agents #########################################
 print ("")
-print ("35 runs WITHOUT changing the agents")
+print ("UNIFORM ACTIVATION: 35 runs WITHOUT changing the agents")
 print ("run,Quantity Traded, Average Price, Standard Deviation")
 for i in range(35):
     # Reset the model and then run it again using the same set of agents
     thisRun.resetModel()
 ##    print "Executing run number " + str(i + 3)
 ##    startTime = datetime.now()
-    thisRun.executeTrades()
+    thisRun.executeTrades_parallel()
     print (str(i + 3) + "," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePriceData()) + "," + str(thisRun.getStdDevPriceData()))
 
 ##################### 35 Runs With Agents #########################################
-print ("35 runs changing the agents")
+print ("UNIFORM ACTIVATION: 35 runs changing the agents")
 print ("run,Quantity Traded, Average Price, Standard Deviation")
 for i in range(35):
     # Reset the model and then run it again using the same set of agents
     thisRun.resetModel()
     thisRun.generateAgents()
-    thisRun.executeTrades()
+    thisRun.executeTrades_parallel()
     print (str(i + 1) + "," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePriceData()) + "," + str(thisRun.getStdDevPriceData()))
