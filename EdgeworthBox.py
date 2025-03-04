@@ -15,8 +15,8 @@ import random
 
 # Set a random seed for reproducibility
 np.random.seed(14248)
-K = 25 #Amount of goods 1
-L = 15 #Amount of goods 2
+K = 20 #Amount of goods 1
+L = 20 #Amount of goods 2
 
 # Create Consumer Class
 # Give them Cobb-Douglas preferences
@@ -152,9 +152,9 @@ def visualize_trades(population):
 
 # Run simulation with different parameters and visualize trades
 num_agents = [20]
-num_iterations = [100000]
+num_iterations = [200]
 run_count = 1
-total_runs = 100
+total_runs = 20
 trade_count = []
 pareto_count = []
 for p in range(total_runs):
@@ -166,8 +166,9 @@ for p in range(total_runs):
             pop = simulation (i,j)
             trade_count.append(len(pop.trade_history))
             print("Number of trades = ", len(pop.trade_history))
-            pareto_count.append(pop.pareto)
-            #visualize_trades(pop)
+            if pop.pareto_optimal():
+                pareto_count.append(pop.pareto)
+                visualize_trades(pop)
             run_count = run_count + 1
     print(f"Average Number of Trades {sum(trade_count)/len(trade_count)}")
     count = pareto_count.count(True)
