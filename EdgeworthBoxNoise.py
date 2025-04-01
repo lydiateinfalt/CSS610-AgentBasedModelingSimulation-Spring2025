@@ -5,6 +5,7 @@ Author: Lydia Teinfalt
 Created on Sat Mar  1 15:55:45 2025
 Edgeworth Box
 Updated: 03/19/2025 Add low level randomness in execute_trade
+Updated: 03/25/2025 Correction to Cobb-Douglas alpha is randomly selected, beta is 1-alpha
 
 @author: petit
 """
@@ -48,9 +49,11 @@ class Consumer:
 # Randomly select two agents in N classes to exchange
 class Population:
     def __init__(self, N):
-        list = [0.25,0.33, 0.5]
+        list = [0.25, 0.5]
+        #alpha is randomly selected from list
+        #beta is 1-alpha e.g. alpha + beta = 1
         alpha = random.choice(list)
-        beta = random.choice(list)
+        beta = 1-alpha
         self.consumers = [Consumer(i, alpha, beta, np.random.randint(1, K), np.random.randint(1, L)) for i in range(N)]
         self.pareto = False
         self.trade_history = []
@@ -166,7 +169,7 @@ def visualize_trades(population):
 
 
 # Run simulation with different parameters and visualize trades
-num_agents = [100]
+num_agents = [70]
 num_iterations = [1000]
 run_count = 1
 total_runs = 45

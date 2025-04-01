@@ -1,8 +1,5 @@
-## Original Code provided by Prof Axtell CSS 610 Spring 2025 Homework 2
-## Code modified by L. Teinfalt 
-## 
-## 4/1 Updated executeTrades_parallel to populate nodes and edges in networks
-## 4/1 Created network_analysis() function to render buyers and sellers networks
+
+
 #Import library packages
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -40,6 +37,7 @@ class Agent:
 
 
 class ZITraderModel:
+
     def __init__(self):
         # This method initializes a new model and sets the parameters
         self.__maxNumberOfTrades = 3500
@@ -59,11 +57,10 @@ class ZITraderModel:
         # Create the agent fields...
         self.__buyers = []
         self.__sellers = []
-        
+
         # Create Graph
         self.GBuyers = nx.Graph()
         self.GSellers = nx.Graph()
-        self.GTrades = nx.Graph()
 
     def resetModel(self):
         # This method resets the model without changing the value or type of the previously-generated agents.
@@ -123,18 +120,14 @@ class ZITraderModel:
 
     def executeTrades_parallel(self):
         # This method creates an index of buyers and sellers
-        
+
         buyer_indices = [i for i, _ in enumerate(self.__buyers)]  # create a list of indexes
         seller_indices = [i for i, _ in enumerate(self.__sellers)]  # create a list of indexes
-        
-        random.shuffle(buyer_indices) 
+        random.shuffle(buyer_indices)
         random.shuffle(seller_indices)
-        
+
         self.GBuyers.add_nodes_from(buyer_indices)
         self.GSellers.add_nodes_from(seller_indices)
-        
-        self.GTrades.add_nodes_from(buyer_indices, bipartite=0)
-        self.GTrades.add_nodes_from(seller_indices, bipartite=1)
 
 
         # uniform activation where all buyers are active once
@@ -161,52 +154,25 @@ class ZITraderModel:
                     self.__tradeData.append(1)
                     self.GBuyers.add_edge(i, j)
                     self.GSellers.add_edge(i, j)
-                    self.GTrades.add_edge(i, j)
+        
+        print("Start network analysis")
+        self.network_analysis()
 
     def network_analysis(self):
-        
-      buyer_indices = [i for i, _ in enumerate(self.__buyers)]  # create a list of indexes
- 
       # Evaluate centrality for Buyers
       layout = nx.spring_layout(self.GBuyers)
-      nx.draw(self.GBuyers, pos=layout, with_labels=True, node_color='lightblue')
-      plt.title("Buyers Network")
+      nx.draw(self.GBuyers, pos=layout, with_labels=True)
       plt.show()
 
       # Evaluate centrality for Sellers
       layout = nx.spring_layout(self.GSellers)
-      nx.draw(self.GSellers, pos=layout, with_labels=True,  node_color='lightgreen')
-      plt.title("Sellers Network")
-      plt.show()
-      
-      pos = nx.spring_layout(self.GTrades)
-      nx.draw(self.GTrades, pos, with_labels=True, node_color=['lightblue' if node in self.GBuyers.nodes else 'lightgreen' for node in self.GTrades.nodes()])
-      plt.title("Trades Network")
+      nx.draw(self.GSellers, pos=layout, with_labels=True)
       plt.show()
 
-      
-      # Calculate positions for nodes in each graph
-      pos_1 = nx.spring_layout(self.GBuyers)
-      pos_2 = nx.spring_layout(self.GSellers)
-      
-      # Shift the second graph to the right
-      shift = 2  # Adjust as needed
-      pos_2_shifted = {node: (x + shift, y) for node, (x, y) in pos_2.items()}
-      
-      # Create a figure and axes
-      plt.figure(figsize=(10, 5))
-      
-      # Draw the first graph
-      nx.draw(self.GBuyers, pos_1, with_labels=True, node_color='lightblue', node_size=500, font_size=10)
-      
-      # Draw the second graph with shifted positions
-      nx.draw(self.GBuyers, pos_2_shifted, with_labels=True, node_color='lightgreen', node_size=500, font_size=10)
-      
-      # Adjust the layout and display the plot
-      plt.tight_layout()
-      plt.title("Buyers and Sellers Network")
-      plt.show()
 
+    def getTradeData(self):
+        # This method returns the tradeData
+        return self.__tradeData
 
     def getLengthTradeData(self):
         # This method returns the number of records in the tradeData

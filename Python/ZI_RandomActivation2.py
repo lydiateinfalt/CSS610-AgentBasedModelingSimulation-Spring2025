@@ -2,12 +2,12 @@
 ## Code modified by L. Teinfalt 
 ## Calling  ZITraders Class, RANDOM Activation
 ## 02/25/2025
-## Updated 4/1: Updated call to network_analysis() in ZITraders class
 
 import ZITraders
 from datetime import datetime
 import matplotlib.pyplot as plt
 import pandas as pd
+
 
 # Generate a population of agents which will be used for the model
 print ("Generating Agents...")
@@ -46,7 +46,6 @@ def visualization(prices, quantity):
 print ("RANDOM ACTIVATION : FIRST RUN ...")
 startTime = datetime.now()
 thisRun.executeTrades_parallel()
-thisRun.network_analysis()
 endTime = datetime.now()
 print ("Model execution time (HH:MM:SS) is: " + str(endTime-startTime))
 print ("Quantity traded = " + str(thisRun.getLengthTradeData()))
@@ -65,15 +64,12 @@ visualization(prices, quantity)
 print ("1," + str(thisRun.getLengthTradeData()) + "," + str(thisRun.getAveragePriceData()) + "," + str(thisRun.getStdDevPriceData()))
 print("")
 
-
-
 ######################### Second Run #########################################
 # Reset the model and then run it again using the same set of agents
 thisRun.resetModel()
 print ("RANDOM ACTIVATION : SECOND RUN")
 startTime = datetime.now()
 thisRun.executeTrades_parallel()
-thisRun.network_analysis()
 endTime = datetime.now()
 print ("Model execution time (HH:MM:SS) is: " + str(endTime-startTime))
 print ("Quantity traded = " + str(thisRun.getLengthTradeData()))
@@ -151,7 +147,6 @@ def run_model(num_runs, change_agent):
         
         #calling the method from ZITraders class using Random activation
         thisRun.executeTrades_parallel()
-        thisRun.network_analysis()
         trade_num = thisRun.getLengthTradeData()
         avg_p = thisRun.getAveragePriceData()
         sd_p = thisRun.getStdDevPriceData()
